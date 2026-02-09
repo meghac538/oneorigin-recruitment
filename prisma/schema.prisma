@@ -1,0 +1,74 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model InterviewSubmission {
+  id          String   @id @default(cuid())
+  candidate   String
+  role        String
+  level       String
+  mode        String
+  solution    String
+  linkId      String?
+  link        InterviewLink? @relation(fields: [linkId], references: [id])
+  questions   Json
+  answers     Json
+  createdAt   DateTime @default(now())
+  report      Report?
+}
+
+model Report {
+  id            String   @id @default(cuid())
+  submissionId  String   @unique
+  submission    InterviewSubmission @relation(fields: [submissionId], references: [id])
+  overall       Int
+  summary       String
+  scores        Json
+  notes         Json
+  highlights    Json
+  status        String
+  createdAt     DateTime @default(now())
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  name         String?
+  company      String?
+  createdAt    DateTime @default(now())
+  sessions     Session[]
+  links        InterviewLink[]
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+  expiresAt DateTime
+}
+
+model InterviewLink {
+  id             String   @id @default(cuid())
+  token          String   @unique
+  userId         String
+  user           User     @relation(fields: [userId], references: [id])
+  role           String
+  level          String
+  mode           String
+  candidateName  String
+  candidateEmail String
+  rounds         Json?
+  createdAt      DateTime @default(now())
+  expiresAt      DateTime?
+  maxSubmissions Int      @default(1)
+  isActive       Boolean  @default(true)
+  submissions    InterviewSubmission[]
+}

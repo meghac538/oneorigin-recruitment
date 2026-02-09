@@ -1,36 +1,53 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+OneOrigin interview workspace for candidate sessions, AI-assisted collaboration, and recruiter reports.
 
 ## Getting Started
 
-First, run the development server:
+Install dependencies:
+
+```bash
+npm install
+```
+
+Create a `.env` file with:
+
+```
+DATABASE_URL="file:./dev.db"
+OPENAI_API_KEY="your-key"
+OPENAI_MODEL="gpt-5"
+```
+
+Run the development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Product Overview
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- Candidate dashboard with multi-round interview flow.
+- Mode-specific prompts:
+  - Build & ship: production-ready feature, tests, deployment notes.
+  - Debug & refactor: regression diagnosis, fix, reliability safeguards.
+  - Design & align: architecture, tradeoffs, stakeholder alignment.
+- AI assistant that only helps when prompted and avoids full solutions.
+- Proctoring: tab/window switches are recorded, warned to candidates, and included in reports.
+- Reports dashboard with scores, highlights, and notes.
 
-## Learn More
+## Routes
 
-To learn more about Next.js, take a look at the following resources:
+- `"/"`: interview creator (role/level/mode + share link).
+- `"/candidate?t=TOKEN"`: candidate workspace.
+- `"/reports"`: recruiter scorecards.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Environment Variables
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- `DATABASE_URL`: Prisma SQLite DB (e.g. `file:./dev.db`).
+- `OPENAI_API_KEY`: enables AI assistant + report evaluator.
+- `OPENAI_MODEL`: model name (defaults to `gpt-5`).
 
-## Deploy on Vercel
+## Notes
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- If `OPENAI_API_KEY` is missing, report evaluation falls back to a local heuristic.
+- Proctoring events are client-side signals; treat as advisory.
