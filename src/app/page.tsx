@@ -220,15 +220,9 @@ export default function Home() {
         <div className="hidden items-center gap-3 md:flex">
           {user ? (
             <>
-              <span className="max-w-[140px] truncate text-sm font-semibold text-[#4b5563]">
-                {recruiterLabel}
+              <span className="max-w-[180px] truncate text-sm font-semibold text-[#0a0a0a]">
+                Hi {recruiterLabel}!
               </span>
-              <Link
-                href="/reports"
-                className="rounded-full border border-[#0a0a0a] px-5 py-2 text-sm font-semibold"
-              >
-                View reports
-              </Link>
               <button
                 onClick={handleLogout}
                 className="rounded-full border border-[#0a0a0a] px-5 py-2 text-sm font-semibold"
@@ -288,6 +282,14 @@ export default function Home() {
                     className="rounded-full bg-[#3ab8ff] px-6 py-3 text-sm font-semibold text-white shadow-[var(--shadow)] transition hover:translate-y-[-2px]"
                   >
                     Sign in to generate
+                  </Link>
+                )}
+                {user && (
+                  <Link
+                    href="/reports"
+                    className="rounded-full border border-[#0a0a0a] px-6 py-3 text-sm font-semibold text-[#0a0a0a]"
+                  >
+                    View reports
                   </Link>
                 )}
               </div>
@@ -645,6 +647,12 @@ export default function Home() {
               We analyze their work session, AI interactions, and debrief to
               surface how they frame problems, communicate, and make tradeoffs.
             </p>
+            <Link
+              href="/reports"
+              className="mt-6 inline-flex w-full items-center justify-center rounded-full bg-[#a7dfff] px-5 py-3 text-sm font-semibold text-[#0a0a0a] transition hover:translate-y-[-2px] md:w-auto"
+            >
+              Open reports dashboard
+            </Link>
             <div className="mt-8 grid gap-4">
               {[
                 "Reasoning trails with decision pivots",
