@@ -9,7 +9,6 @@ export async function POST(request: Request) {
       email?: string;
       password?: string;
       name?: string;
-      company?: string;
     };
     const email = body.email?.toLowerCase().trim();
     const password = body.password?.trim();
@@ -35,7 +34,6 @@ export async function POST(request: Request) {
         email,
         passwordHash,
         name: body.name?.trim() || null,
-        company: body.company?.trim() || null,
       },
     });
 

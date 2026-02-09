@@ -1,10 +1,10 @@
 import { redirect } from "next/navigation";
 
 type Props = {
-  params: { token: string };
+  params: Promise<{ token: string }>;
 };
 
-export default function InterviewRedirect({ params }: Props) {
-  const token = params.token;
+export default async function InterviewRedirect({ params }: Props) {
+  const { token } = await params;
   redirect(`/candidate?t=${token}`);
 }

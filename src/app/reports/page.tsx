@@ -215,8 +215,16 @@ export default function ReportsPage() {
           </p>
           <h1 className="text-3xl font-semibold">Candidate Scorecards</h1>
         </div>
-        <div className="rounded-full border border-[#0a0a0a] px-4 py-2 text-xs font-semibold">
-          Live reports · {reports.length} candidates
+        <div className="flex items-center gap-3">
+          <a
+            href="/"
+            className="rounded-full border border-[#0a0a0a] px-4 py-2 text-xs font-semibold"
+          >
+            Back to home
+          </a>
+          <div className="rounded-full border border-[#0a0a0a] px-4 py-2 text-xs font-semibold">
+            Live reports · {reports.length} candidates
+          </div>
         </div>
       </header>
 

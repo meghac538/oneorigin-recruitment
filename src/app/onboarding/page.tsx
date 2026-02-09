@@ -4,13 +4,12 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
 type MeResponse = {
-  user: { name?: string | null; company?: string | null } | null;
+  user: { name?: string | null } | null;
 };
 
 export default function OnboardingPage() {
   const router = useRouter();
   const [name, setName] = useState("");
-  const [company, setCompany] = useState("");
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -24,7 +23,6 @@ export default function OnboardingPage() {
         return;
       }
       setName(data.user.name ?? "");
-      setCompany(data.user.company ?? "");
       setLoading(false);
     }
     loadProfile();
@@ -38,7 +36,7 @@ export default function OnboardingPage() {
       const response = await fetch("/api/auth/profile", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, company }),
+        body: JSON.stringify({ name }),
       });
       if (!response.ok) {
         const data = (await response.json()) as { error?: string };
@@ -81,15 +79,6 @@ export default function OnboardingPage() {
               <input
                 value={name}
                 onChange={(event) => setName(event.target.value)}
-                className="mt-2 w-full rounded-2xl border border-[#e5e7eb] px-4 py-3 text-sm"
-                required
-              />
-            </label>
-            <label className="text-sm font-semibold text-[#0a0a0a]">
-              Company
-              <input
-                value={company}
-                onChange={(event) => setCompany(event.target.value)}
                 className="mt-2 w-full rounded-2xl border border-[#e5e7eb] px-4 py-3 text-sm"
                 required
               />

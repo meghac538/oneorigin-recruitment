@@ -188,6 +188,7 @@ export default function CandidateWorkspace() {
   const [timerSeconds, setTimerSeconds] = useState(DEFAULT_TIMEBOX_MINUTES * 60);
   const [timerRunning] = useState(true);
   const [showTranscript] = useState(false);
+  const [draftLoaded, setDraftLoaded] = useState(false);
 
   const totalQuestions = TOTAL_FOLLOW_UPS;
   const currentRound = rounds[roundIndex] ?? "ice";
@@ -340,6 +341,71 @@ export default function CandidateWorkspace() {
     }
     loadLink();
   }, [token, router]);
+
+  useEffect(() => {
+    if (!token || linkLoading || error || draftLoaded) return;
+    if (typeof window === "undefined") return;
+    const draftKey = `oo_draft_${token}`;
+    const raw = window.localStorage.getItem(draftKey);
+    if (raw) {
+      try {
+        const parsed = JSON.parse(raw) as {
+          messages?: Message[];
+          qaByRound?: Record<string, QAItem[]>;
+          solutionByRound?: Record<string, string>;
+          roundIndex?: number;
+          candidateMsgsByRound?: Record<string, number>;
+          aiInjectedByRound?: Record<string, boolean>;
+          timerSeconds?: number;
+        };
+        if (parsed.messages?.length) setMessages(parsed.messages);
+        if (parsed.qaByRound) setQaByRound(parsed.qaByRound);
+        if (parsed.solutionByRound) setSolutionByRound(parsed.solutionByRound);
+        if (typeof parsed.roundIndex === "number") setRoundIndex(parsed.roundIndex);
+        if (parsed.candidateMsgsByRound) {
+          setCandidateMsgsByRound(parsed.candidateMsgsByRound);
+        }
+        if (parsed.aiInjectedByRound) setAiInjectedByRound(parsed.aiInjectedByRound);
+        if (typeof parsed.timerSeconds === "number") {
+          setTimerSeconds(parsed.timerSeconds);
+        }
+      } catch {
+        // ignore draft restore failures
+      }
+    }
+    setDraftLoaded(true);
+  }, [token, linkLoading, error, draftLoaded]);
+
+  useEffect(() => {
+    if (!token || linkLoading || error || !draftLoaded) return;
+    if (typeof window === "undefined") return;
+    const draftKey = `oo_draft_${token}`;
+    const payload = {
+      messages,
+      qaByRound,
+      solutionByRound,
+      roundIndex,
+      candidateMsgsByRound,
+      aiInjectedByRound,
+      timerSeconds,
+    };
+    const handle = window.setTimeout(() => {
+      window.localStorage.setItem(draftKey, JSON.stringify(payload));
+    }, 500);
+    return () => window.clearTimeout(handle);
+  }, [
+    token,
+    linkLoading,
+    error,
+    draftLoaded,
+    messages,
+    qaByRound,
+    solutionByRound,
+    roundIndex,
+    candidateMsgsByRound,
+    aiInjectedByRound,
+    timerSeconds,
+  ]);
 
   if (linkLoading) {
     return (

@@ -10,14 +10,12 @@ export async function POST(request: Request) {
 
   const body = (await request.json()) as {
     name?: string;
-    company?: string;
   };
 
   await prisma.user.update({
     where: { id: user.id },
     data: {
       name: body.name?.trim() || null,
-      company: body.company?.trim() || null,
     },
   });
 

@@ -86,6 +86,7 @@ export default function Home() {
   const [candidateLink, setCandidateLink] = useState("");
   const [creatorError, setCreatorError] = useState<string | null>(null);
   const [creating, setCreating] = useState(false);
+  const [copyNotice, setCopyNotice] = useState<string | null>(null);
 
   const recruiterLabel = useMemo(() => {
     if (!user) return "";
@@ -139,6 +140,16 @@ export default function Home() {
     if (!generated) return "/candidate";
     return candidateLink;
   }, [generated, candidateLink]);
+  const shareLinkFull = useMemo(() => {
+    if (!generated) return "";
+    if (typeof window === "undefined") return shareLinkValue;
+    return new URL(shareLinkValue, window.location.origin).toString();
+  }, [generated, shareLinkValue]);
+  const candidateLinkFull = useMemo(() => {
+    if (!generated) return "";
+    if (typeof window === "undefined") return candidateLinkValue;
+    return new URL(candidateLinkValue, window.location.origin).toString();
+  }, [generated, candidateLinkValue]);
 
   function handleChange<K extends keyof InterviewForm>(
     key: K,
@@ -617,10 +628,31 @@ export default function Home() {
                     : "Generate the interview to create a shareable link."}
                 </p>
                 <div className="mt-4 rounded-2xl border border-dashed border-[#e5e7eb] bg-white px-4 py-4 text-sm text-[#0a0a0a]">
-                  {generated ? shareLinkValue : "oneorigin.ai/interview/…"}
+                  {generated ? shareLinkFull : "oneorigin.ai/interview/…"}
                 </div>
+                <button
+                  type="button"
+                  onClick={async () => {
+                    if (!shareLinkFull) return;
+                    try {
+                      await navigator.clipboard.writeText(shareLinkFull);
+                      setCopyNotice("Copied share link");
+                      window.setTimeout(() => setCopyNotice(null), 2000);
+                    } catch {
+                      // ignore copy failures
+                    }
+                  }}
+                  className="mt-3 inline-flex w-full items-center justify-center rounded-full border border-[#0a0a0a] px-5 py-3 text-sm font-semibold text-[#0a0a0a]"
+                >
+                  Copy share link
+                </button>
+                {copyNotice && (
+                  <div className="mt-3 rounded-2xl bg-[#a7dfff]/30 px-4 py-3 text-sm text-[#0a0a0a]">
+                    {copyNotice}
+                  </div>
+                )}
                 <a
-                  href={candidateLinkValue}
+                  href={candidateLinkFull || candidateLinkValue}
                   className="mt-4 inline-flex w-full items-center justify-center rounded-full bg-[#0a0a0a] px-5 py-3 text-sm font-semibold text-[#ffffff]"
                 >
                   Open candidate workspace

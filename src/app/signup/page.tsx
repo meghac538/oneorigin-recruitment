@@ -7,7 +7,6 @@ import { useState } from "react";
 export default function SignupPage() {
   const router = useRouter();
   const [name, setName] = useState("");
-  const [company, setCompany] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -21,7 +20,7 @@ export default function SignupPage() {
       const response = await fetch("/api/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, company, email, password }),
+        body: JSON.stringify({ name, email, password }),
       });
       if (!response.ok) {
         const data = (await response.json()) as { error?: string };
@@ -44,7 +43,7 @@ export default function SignupPage() {
           </p>
           <h1 className="mt-3 text-3xl font-semibold">Create account</h1>
           <p className="mt-2 text-sm text-[#4b5563]">
-            Set up your hiring workspace in minutes.
+            Set up your hiring account in minutes.
           </p>
           <form onSubmit={handleSubmit} className="mt-6 space-y-4">
             <label className="text-sm font-semibold text-[#0a0a0a]">
@@ -53,17 +52,6 @@ export default function SignupPage() {
                 value={name}
                 onChange={(event) => setName(event.target.value)}
                 className="mt-2 w-full rounded-2xl border border-[#e5e7eb] px-4 py-3 text-sm"
-                placeholder="Megha Patel"
-                required
-              />
-            </label>
-            <label className="text-sm font-semibold text-[#0a0a0a]">
-              Company
-              <input
-                value={company}
-                onChange={(event) => setCompany(event.target.value)}
-                className="mt-2 w-full rounded-2xl border border-[#e5e7eb] px-4 py-3 text-sm"
-                placeholder="OneOrigin"
                 required
               />
             </label>
@@ -73,7 +61,6 @@ export default function SignupPage() {
                 value={email}
                 onChange={(event) => setEmail(event.target.value)}
                 className="mt-2 w-full rounded-2xl border border-[#e5e7eb] px-4 py-3 text-sm"
-                placeholder="you@company.com"
                 type="email"
                 required
               />
