@@ -87,6 +87,17 @@ export default function Home() {
   const [creatorError, setCreatorError] = useState<string | null>(null);
   const [creating, setCreating] = useState(false);
 
+  const recruiterLabel = useMemo(() => {
+    if (!user) return "";
+    const raw = user.name?.trim() || user.email;
+    if (!raw) return "";
+    if (user.name) {
+      return raw.split(/\s+/)[0] ?? raw;
+    }
+    const emailPrefix = raw.split("@")[0] ?? raw;
+    return emailPrefix.split(/[._-]/)[0] ?? emailPrefix;
+  }, [user]);
+
   useEffect(() => {
     async function loadUser() {
       try {
@@ -205,15 +216,12 @@ export default function Home() {
           <a className="transition hover:text-[#0a0a0a]" href="#reports">
             Reports
           </a>
-          <a className="transition hover:text-[#0a0a0a]" href="/reports">
-            Dashboard
-          </a>
         </nav>
         <div className="hidden items-center gap-3 md:flex">
           {user ? (
             <>
               <span className="max-w-[140px] truncate text-sm font-semibold text-[#4b5563]">
-                {user.name ?? user.email}
+                {recruiterLabel}
               </span>
               <Link
                 href="/reports"
